@@ -2,7 +2,6 @@ package com.example.school_bdd.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,31 +9,33 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.List;
-
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Eleve {
+public class Matiere {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private String nom;
-    private String prenom;
-    private LocalDate dateNaissance;
+    private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "classe_id")
-    @JsonBackReference(value = "classe-eleves")
-    private Classe classe;
+    private double coefficient;
 
-    @OneToMany(mappedBy = "eleve", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference(value = "eleve-notes")
-    private List<Note> notes;
+    @ManyToOne()
+    @JoinColumn(name = "eleve_id")
+    @JsonBackReference(value = "eleve-matieres")
+    private Eleve eleves;
+
+
+    @OneToMany(mappedBy = "matiere", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "matiere-notes")
+    private List <Note> notes;
+
+
+
 }

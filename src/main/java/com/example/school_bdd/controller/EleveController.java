@@ -7,6 +7,7 @@ import com.example.school_bdd.exception.ResourceNotFoundException;
 import com.example.school_bdd.service.ClassesService;
 import com.example.school_bdd.service.EleveService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class EleveController {
         return eleveService.getEleveById(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<Eleve> getAllEleves() {
         return eleveService.getAllEleves();
     }
@@ -55,5 +56,13 @@ public class EleveController {
     public void deleteEleve(@PathVariable Long id) {
         eleveService.deleteEleve(id);
     }
+
+    @GetMapping("/{id}/moyenne")
+    public ResponseEntity<Double> getMoyenneByEleveId(@PathVariable Long id) {
+        Double moyenne = eleveService.calculerMoyenne(id);
+        return ResponseEntity.ok(moyenne);
+    }
+
+
 
 }

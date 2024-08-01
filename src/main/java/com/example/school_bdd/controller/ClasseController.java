@@ -45,7 +45,7 @@ public class ClasseController {
 
 
 
-    @GetMapping("/schools/{id}")
+    @GetMapping("/add/{id}")
     public ResponseEntity<List<Classe>> getClasseBySchools(@PathVariable Long id) {
         Etablissement existEtablissement = etablissementService.getEtablissementById(id);
         if (existEtablissement == null) {
@@ -55,12 +55,7 @@ public class ClasseController {
         }
     }
 
-    @GetMapping
-    public List<Classe> getAllClasses() {
 
-
-        return classeService.getAllClasses();
-    }
 
     @PutMapping("/{id}")
     public Classe updateClasse(@PathVariable Long id, @RequestBody Classe classe) {
