@@ -2,7 +2,6 @@ package com.example.school_bdd.service;
 
 
 import com.example.school_bdd.entity.Eleve;
-import com.example.school_bdd.entity.Matiere;
 import com.example.school_bdd.entity.Note;
 import com.example.school_bdd.repository.Eleve_repo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,45 +15,67 @@ public class EleveService {
     @Autowired
     private Eleve_repo eleve_repo;
 
+    public List<Eleve> getAllEleves() {
+        return eleve_repo.findAll();
+    }
+
+    public Eleve getEleveById(Long id) {
+        return eleve_repo.findById(id).orElse(null);
+    }
 
     public Eleve addEleve(Eleve eleve) {
         return eleve_repo.save(eleve);
     }
 
-    public Eleve getEleveById(Long id) {
-        return eleve_repo.findById(id).orElseThrow(
-                () -> new RuntimeException("Eleve not found"));
-    }
-
-    public List<Eleve> getAllEleves() {
-        return eleve_repo.findAll();
-    }
-
     public Eleve updateEleve(Long id, Eleve eleve) {
-        eleve.setId(id);
-        return eleve_repo.save(eleve);
+        Eleve existingEleve = eleve_repo.findById(id).orElse(null);
+        if (existingEleve != null) {
+            existingEleve.setNom(eleve.getNom());
+            existingEleve.setPrenom(eleve.getPrenom());
+            existingEleve.setClasse(eleve.getClasse());
+            existingEleve.setNotes(eleve.getNotes());
+            existingEleve.setDateNaissance(eleve.getDateNaissance());
+            existingEleve.setMatricule(eleve.getMatricule());
+            existingEleve.setPhotoUrl(eleve.getPhotoUrl());
+            return eleve_repo.save(existingEleve);
+        } else {
+            return null;
+        }
     }
 
     public void deleteEleve(Long id) {
-        eleve_repo.deleteById(id);
+        Eleve existingEleve = eleve_repo.findById(id).orElse(null);
+        if (existingEleve != null){
+            eleve_repo.delete(existingEleve);
+        } else {
+            throw new RuntimeException("Eleve not found");
+        }
     }
 
     public Double calculerMoyenne(Long eleveId) {
-        Eleve eleve = getEleveById(eleveId);
+        Eleve eleve = eleve_repo.findById(eleveId)
+                .orElseThrow(() -> new RuntimeException("Élève non trouvé"));
+
         List<Note> notes = eleve.getNotes();
-        if (notes == null || notes.isEmpty()) {
-            return 0.0;
-        }
-        Double somme = 0.0;
-        Double totalCoefficients = 0.0;
+
+        // Calcul de la somme pondérée des notes et des coefficients
+        double sommeNotesPondérées = 0.0;
+        double sommeCoefficients = 0.0;
+
         for (Note note : notes) {
-            Matiere matiere = note.getMatiere(); // corrected to getMatiere() instead of getMatieres()
-            Double coefficient = matiere.getCoefficient();
-            somme += note.getNote() * coefficient; // corrected to getValeur() instead of getNote()
-            totalCoefficients += coefficient;
+            double coefficient = note.getMatiere().getCoefficient();
+            sommeNotesPondérées += note.getNote() * coefficient;
+            sommeCoefficients += coefficient;
         }
-        return totalCoefficients == 0 ? 0.0 : somme / totalCoefficients;
+
+        if (sommeCoefficients == 0) {
+            return 0.0; // Évite la division par zéro si aucune matière n'a de coefficient
+        }
+
+        return sommeNotesPondérées * sommeCoefficients;
     }
+
+
 
 
 

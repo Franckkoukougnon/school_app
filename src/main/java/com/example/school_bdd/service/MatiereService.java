@@ -14,9 +14,6 @@ public class MatiereService {
     @Autowired
     private Matiere_repo matiere_repo;
 
-    // TODO : Ajouter les méthodes pour les requêtes HTTP
-    //  GET, POST, PUT, DELETE
-
     public List<Matiere> getAllMatieres() {
         return matiere_repo.findAll();
     }
@@ -25,19 +22,29 @@ public class MatiereService {
         return matiere_repo.findById(id).orElse(null);
     }
 
-
-
-    public void deleteMatiere(Long id) {
-        matiere_repo.deleteById(id);
+    public Matiere addMatiere(Matiere matiere) {
+        return matiere_repo.save(matiere);
     }
 
     public Matiere updateMatiere(Long id, Matiere matiere) {
-        matiere.setId(id);
-        return matiere_repo.save(matiere);
+        Matiere existingMatiere = matiere_repo.findById(id).orElse(null);
+        if (existingMatiere != null) {
+            existingMatiere.setName(matiere.getName());
+            existingMatiere.setCoefficient(matiere.getCoefficient());
+            existingMatiere.setClasse(matiere.getClasse());
+            existingMatiere.setNotes(matiere.getNotes());
+            return matiere_repo.save(existingMatiere);
+        } else {
+            return null;
+        }
     }
 
-
-    public Matiere addMatiere(Matiere matiere) {
-        return matiere_repo.save(matiere);
+    public void deleteMatiere(Long id) {
+        Matiere existingMatiere = matiere_repo.findById(id).orElse(null);
+        if (existingMatiere != null){
+            matiere_repo.delete(existingMatiere);
+        } else {
+            throw new RuntimeException("Matiere not found");
+        }
     }
 }

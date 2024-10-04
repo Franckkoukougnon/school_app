@@ -33,6 +33,8 @@ public class Classe {
     @JsonManagedReference(value = "classe-eleves")
     private List<Eleve> eleves;
 
-
+    @OneToMany(mappedBy = "classe", cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "classe-matieres")
+    private List<Matiere> matieres;
 
 }

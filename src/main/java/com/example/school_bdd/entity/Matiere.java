@@ -26,15 +26,20 @@ public class Matiere {
 
     private double coefficient;
 
-    @ManyToOne()
-    @JoinColumn(name = "eleve_id")
-    @JsonBackReference(value = "eleve-matieres")
-    private Eleve eleves;
 
-
-    @OneToMany(mappedBy = "matiere", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "matiere", cascade = CascadeType.ALL)
     @JsonManagedReference(value = "matiere-notes")
     private List <Note> notes;
+
+    @ManyToOne
+    @JoinColumn(name = "classe_id")
+    @JsonBackReference(value = "classe-matieres")
+    private Classe classe;
+
+
+
+
+
 
 
 

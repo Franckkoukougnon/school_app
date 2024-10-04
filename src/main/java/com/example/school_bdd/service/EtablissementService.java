@@ -2,41 +2,48 @@ package com.example.school_bdd.service;
 
 
 import com.example.school_bdd.entity.Etablissement;
-import com.example.school_bdd.exception.EtablissementNotFoundException;
-import com.example.school_bdd.exception.ResourceNotFoundException;
 import com.example.school_bdd.repository.Etablissement_repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EtablissementService {
 
     @Autowired
-    private Etablissement_repo etablissement_repo;
+    private Etablissement_repo etablissment_repo;
 
-
-    public Etablissement addEtablissement(Etablissement etablissement) {
-        return etablissement_repo.save(etablissement);
+    public List<Etablissement> getAllEtablissements() {
+        return etablissment_repo.findAll();
     }
 
     public Etablissement getEtablissementById(Long id) {
-        Optional<Etablissement> etablissementOptional = etablissement_repo.findById(id);
-        return etablissementOptional.orElseThrow(() -> new EtablissementNotFoundException(id));
+        return etablissment_repo.findById(id).orElse(null);
     }
 
-    public List<Etablissement> getAllEtablissements() {
-        return etablissement_repo.findAll();
+    public Etablissement addEtablissement(Etablissement etablissement) {
+        return etablissment_repo.save(etablissement);
     }
 
     public Etablissement updateEtablissement(Long id, Etablissement etablissement) {
-        etablissement.setId(id);
-        return etablissement_repo.save(etablissement);
+        Etablissement existingEtablissement = etablissment_repo.findById(id).orElse(null);
+        if (existingEtablissement != null) {
+            existingEtablissement.setNom(etablissement.getNom());
+            existingEtablissement.setEmail(etablissement.getEmail());
+            existingEtablissement.setClasses(etablissement.getClasses());
+            return etablissment_repo.save(existingEtablissement);
+        } else {
+            return null;
+        }
     }
 
     public void deleteEtablissement(Long id) {
-        etablissement_repo.deleteById(id);
+        Etablissement existingEtablissement = etablissment_repo.findById(id).orElse(null);
+        if (existingEtablissement != null){
+            etablissment_repo.delete(existingEtablissement);
+        } else {
+            throw new RuntimeException("Etablissement not found");
+        }
     }
 }

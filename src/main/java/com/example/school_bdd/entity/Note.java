@@ -2,6 +2,7 @@ package com.example.school_bdd.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,23 +21,20 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
     private Double note;
-
     private String appreciation;
 
 
-    @ManyToOne()
+    @ManyToOne
+    @JoinColumn(name = "matiere_id")
     @JsonBackReference(value = "matiere-notes")
     private Matiere matiere;
 
-    @ManyToOne
+
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "eleve_id")
-    @JsonBackReference(value = "eleve-notes")
+    @JsonBackReference(value = "note-eleve")
     private Eleve eleve;
-
-
-
 
 
 }
