@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/etablissement")
+@RequestMapping("/api/etablissement")
 public class EtablissementController {
 
     @Autowired
@@ -22,17 +22,17 @@ public class EtablissementController {
     }
 
     @GetMapping("/{id}")
-    public Etablissement getEtablissementById(Long id){
+    public Etablissement getEtablissementById(@PathVariable Long id){
         return etablissementService.getEtablissementById(id);
     }
 
     @PostMapping("/add")
-    public Etablissement addEtablissement(Etablissement etablissement){
+    public Etablissement addEtablissement(@RequestBody Etablissement etablissement){
         return etablissementService.addEtablissement(etablissement);
     }
 
     @PutMapping("/update/{id}")
-    public Etablissement updateEtablissement(@PathVariable Long id, Etablissement etablissement){
+    public Etablissement updateEtablissement(@PathVariable Long id,@RequestBody Etablissement etablissement){
         return etablissementService.updateEtablissement(id, etablissement);
     }
 

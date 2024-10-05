@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/matiere")
+@RequestMapping("/api/matiere")
 public class MatiereController {
 
     @Autowired
@@ -21,17 +21,17 @@ public class MatiereController {
     }
 
     @GetMapping("/{id}")
-    public Matiere getMatiereById(Long id){
+    public Matiere getMatiereById(@PathVariable Long id){
         return matiereService.getMatiereById(id);
     }
 
     @PostMapping("/add")
-    public Matiere addMatiere(Matiere matiere){
+    public Matiere addMatiere(@RequestBody Matiere matiere){
         return matiereService.addMatiere(matiere);
     }
 
     @PutMapping("/update/{id}")
-    public Matiere updateMatiere(@PathVariable Long id, Matiere matiere){
+    public Matiere updateMatiere(@PathVariable Long id,@RequestBody Matiere matiere){
         return matiereService.updateMatiere(id, matiere);
     }
 

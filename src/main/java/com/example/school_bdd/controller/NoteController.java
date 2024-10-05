@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/note")
+@RequestMapping("/api/note")
 public class NoteController {
 
     @Autowired
@@ -22,17 +22,17 @@ public class NoteController {
     }
 
     @GetMapping("/{id}")
-    public Note getNoteById(Long id){
+    public Note getNoteById(@PathVariable Long id){
         return noteService.getNoteById(id);
     }
 
     @PostMapping("/add")
-    public Note addNote(Note note){
+    public Note addNote(@RequestBody Note note){
         return noteService.addNote(note);
     }
 
     @PutMapping("/update/{id}")
-    public Note updateNote(@PathVariable Long id, Note note){
+    public Note updateNote(@PathVariable Long id,@RequestBody Note note){
         return noteService.updateNote(id, note);
     }
 

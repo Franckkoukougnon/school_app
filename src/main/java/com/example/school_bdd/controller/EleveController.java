@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/eleve")
+@RequestMapping("/api/eleve")
 public class EleveController {
 
 
@@ -22,7 +22,7 @@ public class EleveController {
     }
 
     @GetMapping("/{id}")
-    public Eleve getEleveById(Long id){
+    public Eleve getEleveById(@PathVariable Long id){
         return eleveService.getEleveById(id);
     }
 
@@ -32,12 +32,12 @@ public class EleveController {
     }
 
     @PostMapping("/add")
-    public Eleve addEleve(Eleve eleve){
+    public Eleve addEleve(@RequestBody Eleve eleve){
         return eleveService.addEleve(eleve);
     }
 
     @PutMapping("/update/{id}")
-    public Eleve updateEleve(@PathVariable Long id, Eleve eleve){
+    public Eleve updateEleve(@PathVariable Long id,@RequestBody Eleve eleve){
         return eleveService.updateEleve(id, eleve);
     }
 

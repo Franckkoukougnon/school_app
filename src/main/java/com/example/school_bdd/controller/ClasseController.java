@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/classe")
+@RequestMapping("/api/classe")
 public class ClasseController {
 
     @Autowired
@@ -22,17 +22,17 @@ public class ClasseController {
     }
 
     @GetMapping("/{id}")
-    public Classe getClasseById(Long id){
+    public Classe getClasseById(@PathVariable Long id){
         return classeService.getClasseById(id);
     }
 
     @PostMapping("/add")
-    public Classe addClasse(Classe classe){
+    public Classe addClasse(@RequestBody Classe classe){
         return classeService.addClasse(classe);
     }
 
     @PutMapping("/update/{id}")
-    public Classe updateClasse(@PathVariable Long id, Classe classe){
+    public Classe updateClasse(@PathVariable Long id,@RequestBody Classe classe){
         return classeService.updateClasse(id, classe);
     }
 
