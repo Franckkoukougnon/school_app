@@ -38,11 +38,45 @@ public class ClasseController {
     }
 
 
+
+    //Methode pour recuperer les classes d'un etablissement par son id
+    @GetMapping("/etablissement/{idEtablissement}/classe/{idClasse}")
+    public ResponseEntity<Classe> getClasseByEtablissement(@PathVariable long idEtablissement, @PathVariable long idClasse) {
+
+        // Vérification de l'existence de l'établissement
+        Etablissement etablissement = checkEtablissementExists(idEtablissement);
+        if (etablissement == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        // Récupérer la classe
+        Classe classe = checkClasseExists(idClasse);
+
+        if (classe == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(classe);
+    }
+
+    // Méthode pour vérifier l'existence d'un établissement
+    private Etablissement checkEtablissementExists(Long idEtablissement) {
+        return etablissementService.getEtablissementById(idEtablissement);
+    }
+
+
+    // Méthode pour vérifier l'existence d'une classe
+    private Classe checkClasseExists(Long idClasse) {
+        return classeService.getClasseById(idClasse);
+    }
+
+
+
     //Methode pour ajouter une classe
     @PostMapping("/add/{idEtablissement}")
     public ResponseEntity<Classe> addClasse(@PathVariable long idEtablissement, @RequestBody Classe classe) {
         // Vérification de l'existence de l'établissement
-        Etablissement etablissement = etablissementService.getEtablissementById(idEtablissement);
+        Etablissement etablissement = checkEtablissementExists(idEtablissement);
 
         if (etablissement == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
