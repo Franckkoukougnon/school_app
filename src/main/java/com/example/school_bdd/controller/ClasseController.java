@@ -2,7 +2,9 @@ package com.example.school_bdd.controller;
 
 
 import com.example.school_bdd.entity.Classe;
+import com.example.school_bdd.entity.Etablissement;
 import com.example.school_bdd.service.ClasseService;
+import com.example.school_bdd.service.EtablissementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +17,15 @@ public class ClasseController {
     @Autowired
     private ClasseService classeService;
 
+    @Autowired
+    private EtablissementService etablissementService;
+
 
 
     //Methode pour recuperer toutes les classes
     @GetMapping("/all")
     public List<Classe> getAllClasses(){
+
         return classeService.getAllClasses();
     }
 
@@ -33,6 +39,8 @@ public class ClasseController {
     //Methode pour ajouter une classe
     @PostMapping("/add")
     public Classe addClasse(@RequestBody Classe classe){
+
+
         return classeService.addClasse(classe);
     }
 
