@@ -13,4 +13,6 @@ public interface Classe_repo extends JpaRepository<Classe, Long> {
     List<Classe> findByEtablissementId(Long id);
 
     Optional<Classe> findByNameAndEtablissement(String name, Etablissement etablissement);
+
+    List<Classe> findByEtablissement(Etablissement etablissement);
 }

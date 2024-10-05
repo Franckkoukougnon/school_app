@@ -41,23 +41,63 @@ public class ClasseController {
 
     //Methode pour recuperer les classes d'un etablissement par son id
     @GetMapping("/etablissement/{idEtablissement}/classe/{idClasse}")
-    public ResponseEntity<Classe> getClasseByEtablissement(@PathVariable long idEtablissement, @PathVariable long idClasse) {
-
-        // Vérification de l'existence de l'établissement
+    public Classe getClasseByEtablissement(@PathVariable Long idEtablissement, @PathVariable Long idClasse) {
+        // Récupérer l'établissement par son ID
         Etablissement etablissement = checkEtablissementExists(idEtablissement);
         if (etablissement == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return null; // Établissement non trouvé
         }
 
-        // Récupérer la classe
+        // Récupérer la classe par son ID
         Classe classe = checkClasseExists(idClasse);
-
         if (classe == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return null; // Classe non trouvée
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(classe);
+        // Vérifier que la classe appartient bien à l'établissement
+        if (!classe.getEtablissement().getId().equals(etablissement.getId())) {
+            return null; // La classe ne correspond pas à l'établissement
+        }
+
+        // Si tout est correct, retourner la classe
+        return classe;
     }
+
+    @GetMapping("/etablissement/{idEtablissement}/all")
+    public List<Classe> getClassesByEtablissement(@PathVariable Long idEtablissement) {
+        // Récupérer l'établissement par son ID
+        Etablissement etablissement = checkEtablissementExists(idEtablissement);
+        if (etablissement == null) {
+            return null; // Établissement non trouvé
+        }
+
+        // Récupérer les classes de l'établissement
+        return classeService.getClassesByEtablissement(etablissement);
+    }
+
+    @DeleteMapping("/delete/etablissement/{idEtablissement}/classe/{idClasse}")
+    public void deleteClasseByEtablissement(@PathVariable Long idEtablissement, @PathVariable Long idClasse) {
+        // Récupérer l'établissement par son ID
+        Etablissement etablissement = checkEtablissementExists(idEtablissement);
+        if (etablissement == null) {
+            return; // Établissement non trouvé
+        }
+
+        // Récupérer la classe par son ID
+        Classe classe = checkClasseExists(idClasse);
+        if (classe == null) {
+            return; // Classe non trouvée
+        }
+
+        // Vérifier que la classe appartient bien à l'établissement
+        if (!classe.getEtablissement().getId().equals(etablissement.getId())) {
+            return; // La classe ne correspond pas à l'établissement
+        }
+
+        // Supprimer la classe
+        classeService.deleteClasse(idClasse);
+    }
+
 
     // Méthode pour vérifier l'existence d'un établissement
     private Etablissement checkEtablissementExists(Long idEtablissement) {
@@ -75,6 +115,7 @@ public class ClasseController {
     //Methode pour ajouter une classe
     @PostMapping("/add/{idEtablissement}")
     public ResponseEntity<Classe> addClasse(@PathVariable long idEtablissement, @RequestBody Classe classe) {
+
         // Vérification de l'existence de l'établissement
         Etablissement etablissement = checkEtablissementExists(idEtablissement);
 

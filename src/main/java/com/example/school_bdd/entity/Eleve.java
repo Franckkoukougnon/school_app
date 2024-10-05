@@ -27,11 +27,9 @@ public class Eleve {
 
     private String nom;
     private String prenom;
-    private LocalDate dateNaissance;
     private int matricule;
 
-    @Column(name = "photo_url", nullable = true)
-    private String photoUrl;
+
 
     @ManyToOne
     @JoinColumn(name = "classe_id")

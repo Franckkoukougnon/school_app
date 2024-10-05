@@ -34,9 +34,9 @@ public class EleveService {
             existingEleve.setPrenom(eleve.getPrenom());
             existingEleve.setClasse(eleve.getClasse());
             existingEleve.setNotes(eleve.getNotes());
-            existingEleve.setDateNaissance(eleve.getDateNaissance());
+
             existingEleve.setMatricule(eleve.getMatricule());
-            existingEleve.setPhotoUrl(eleve.getPhotoUrl());
+
             return eleve_repo.save(existingEleve);
         } else {
             return null;
