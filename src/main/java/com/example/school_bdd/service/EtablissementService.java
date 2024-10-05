@@ -19,7 +19,9 @@ public class EtablissementService {
     }
 
     public Etablissement getEtablissementById(Long id) {
-        return etablissment_repo.findById(id).orElse(null);
+        return etablissment_repo.findById(id).orElseThrow(
+                () -> new RuntimeException("Établissement non trouvé")
+        );
     }
 
     public Etablissement addEtablissement(Etablissement etablissement) {
