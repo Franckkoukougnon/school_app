@@ -37,4 +37,5 @@ public class Classe {
     @JsonManagedReference(value = "classe-matieres")
     private List<Matiere> matieres;
 
+
 }
