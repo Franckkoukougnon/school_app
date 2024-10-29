@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface Note_repository extends JpaRepository<Note, Long> {
 
+    List<Note> findByEleveIdAndMatiereId(Long idEleve, Long idMatiere);
 }
