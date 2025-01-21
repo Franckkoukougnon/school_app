@@ -4,6 +4,8 @@ package com.example.school_bdd.service;
 import com.example.school_bdd.entity.Etablissement;
 import com.example.school_bdd.repository.Etablissement_repo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,10 @@ public class EtablissementService {
 
     public List<Etablissement> getAllEtablissements() {
         return etablissment_repo.findAll();
+    }
+
+    public Page<Etablissement>PageOfEtablissment(Pageable pageable){
+        return etablissment_repo.findAll(pageable);
     }
 
     public Etablissement getEtablissementById(Long id) {
@@ -47,5 +53,9 @@ public class EtablissementService {
         } else {
             throw new RuntimeException("Etablissement not found");
         }
+    }
+
+    public Page<Etablissement> finByNomStartingWith(String nom, Pageable pageable) {
+        return etablissment_repo.findByNomStartingWith(nom, pageable);
     }
 }

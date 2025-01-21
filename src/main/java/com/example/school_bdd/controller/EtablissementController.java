@@ -6,6 +6,10 @@ import com.example.school_bdd.service.EtablissementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +28,21 @@ public class EtablissementController {
     @Operation(summary = "Obtenir tous les établissements")
     public List<Etablissement> getAllEtablissements(){
         return etablissementService.getAllEtablissements();
+    }
+
+    @GetMapping("/page")
+    @Operation(summary = "Obtenir une page d'établissements")
+    public Page<Etablissement> getAllEtablissment(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size,
+                                                  @RequestParam(defaultValue = "true") boolean ascending,
+                                                  @RequestParam(defaultValue = "nom") String nom){
+        Sort sort = ascending ? Sort.by("nom").ascending() : Sort.by("nom").descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        if(nom != null && !nom.isEmpty()){
+            return  etablissementService.finByNomStartingWith(nom, pageable);
+        }
+        return etablissementService.PageOfEtablissment(pageable);
     }
 
     //Methode pour recuperer un etablissement par son id
