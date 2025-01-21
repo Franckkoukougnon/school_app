@@ -26,7 +26,7 @@ public class EtablissementService {
 
     public Etablissement getEtablissementById(Long id) {
         return etablissment_repo.findById(id).orElseThrow(
-                () -> new RuntimeException("Établissement non trouvé")
+                () -> new RuntimeException("Etablissment with id " + id + " not found")
         );
     }
 
@@ -35,14 +35,14 @@ public class EtablissementService {
     }
 
     public Etablissement updateEtablissement(Long id, Etablissement etablissement) {
-        Etablissement existingEtablissement = etablissment_repo.findById(id).orElse(null);
+        Etablissement existingEtablissement = etablissment_repo.findById(id).orElseThrow(()-> new RuntimeException("Etablissement with id " + id + " not found"));
         if (existingEtablissement != null) {
             existingEtablissement.setNom(etablissement.getNom());
             existingEtablissement.setEmail(etablissement.getEmail());
             existingEtablissement.setClasses(etablissement.getClasses());
             return etablissment_repo.save(existingEtablissement);
         } else {
-            return null;
+            throw new RuntimeException("Etablissement not found");
         }
     }
 
