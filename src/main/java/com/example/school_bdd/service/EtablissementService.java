@@ -2,6 +2,7 @@ package com.example.school_bdd.service;
 
 
 import com.example.school_bdd.entity.Etablissement;
+import com.example.school_bdd.repository.Classe_repo;
 import com.example.school_bdd.repository.Etablissement_repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,46 +17,45 @@ public class EtablissementService {
     @Autowired
     private Etablissement_repo etablissment_repo;
 
-    public List<Etablissement> getAllEtablissements() {
+    @Autowired
+    private Classe_repo classe_repo;
+
+
+    public Etablissement getEtablissementById(Long idSchool) {
+        return etablissment_repo.findById(idSchool).orElse(null);
+    }
+
+    public List<Etablissement> getAllEtablissement() {
         return etablissment_repo.findAll();
     }
 
-    public Page<Etablissement>PageOfEtablissment(Pageable pageable){
-        return etablissment_repo.findAll(pageable);
+    public Page<Etablissement> getPageSchool(int page, int size) {
+        return etablissment_repo.findAll(Pageable.ofSize(size).withPage(page));
     }
 
-    public Etablissement getEtablissementById(Long id) {
-        return etablissment_repo.findById(id).orElseThrow(
-                () -> new RuntimeException("Etablissment with id " + id + " not found")
-        );
-    }
-
-    public Etablissement addEtablissement(Etablissement etablissement) {
+    public Etablissement createEtablissement(Etablissement etablissement) {
         return etablissment_repo.save(etablissement);
     }
 
-    public Etablissement updateEtablissement(Long id, Etablissement etablissement) {
-        Etablissement existingEtablissement = etablissment_repo.findById(id).orElseThrow(()-> new RuntimeException("Etablissement with id " + id + " not found"));
-        if (existingEtablissement != null) {
-            existingEtablissement.setNom(etablissement.getNom());
-            existingEtablissement.setEmail(etablissement.getEmail());
-            existingEtablissement.setClasses(etablissement.getClasses());
-            return etablissment_repo.save(existingEtablissement);
-        } else {
-            throw new RuntimeException("Etablissement not found");
+    public Etablissement updateEtablissement(Etablissement etablissement, Long idSchool) {
+        Etablissement etablissementToUpdate = etablissment_repo.findById(idSchool).orElse(null);
+        if (etablissementToUpdate == null) {
+            return null;
         }
+        etablissementToUpdate.setNom(etablissement.getNom());
+        etablissementToUpdate.setEmail(etablissement.getEmail());
+        etablissementToUpdate.setClasses(etablissement.getClasses());
+
+        return etablissment_repo.save(etablissementToUpdate);
+
     }
 
-    public void deleteEtablissement(Long id) {
-        Etablissement existingEtablissement = etablissment_repo.findById(id).orElse(null);
-        if (existingEtablissement != null){
-            etablissment_repo.delete(existingEtablissement);
-        } else {
-            throw new RuntimeException("Etablissement not found");
+    public Etablissement deleteEtablissement (Long idSchool) {
+        Etablissement etablissementToDelete = etablissment_repo.findById(idSchool).orElse(null);
+        if (etablissementToDelete == null) {
+            return null;
         }
-    }
-
-    public Page<Etablissement> finByNomStartingWith(String nom, Pageable pageable) {
-        return etablissment_repo.findByNomStartingWith(nom, pageable);
+        etablissment_repo.delete(etablissementToDelete);
+        return etablissementToDelete;
     }
 }
